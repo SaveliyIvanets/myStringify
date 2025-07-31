@@ -1,6 +1,7 @@
 //P.S кажется что массивы и объекты работают хорошо
 // если в объекте массив то все хорошо (вроде), но если в массиве объект то начинаются страшные вещи....(я бы сказал оно чуть чуть работает...)
 // space = 0 не работает ИЗ-ЗА незначительного бага с отступами, который я могу пофиксить но после борбы с массивами у меня нет сил.......
+// UPD: он не работает когда в объекте массив вида [] я без понятия почему и если циклическая ссылка больше единичной вложенности
 function myStringify(value, space) {
   if (typeof value === "bigint") {
     throw new TypeError("BigInt value can't be serialized in JSON");
@@ -26,7 +27,7 @@ function myStringify(value, space) {
   ) {
     return "{}";
   }
-  if (!isFinite(value)) {
+  if (typeof value === "number" && !isFinite(value)) {
     return "null";
   }
   if (Object.prototype.toString.call(value).slice(8, -1) === "Data") {
@@ -444,7 +445,6 @@ const testObject = {
       ],
     ],
   ],
-  empty: [],
 };
 let my = myStringify(testObject, space);
 let their = JSON.stringify(testObject, null, space);
